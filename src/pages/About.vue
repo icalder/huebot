@@ -1,5 +1,5 @@
 <template>
-  <h1>About Page</h1>
+  <h1>About</h1>
   <ul v-if="files.length > 0">
     <li v-for="file in files">
       {{ file }}
@@ -11,11 +11,9 @@
 <script setup lang="ts">
 // https://vuejs.org/guide/typescript/composition-api.html#typescript-with-composition-api
 
-import { onServerPrefetch, Ref, ref, useSSRContext } from 'vue'
-import { inject } from 'vue';
-import { InitialDataKey } from '../util/InjectionKeys';
+import { inject, onServerPrefetch, Ref, ref, useSSRContext } from 'vue'
+import { InitialDataKey } from '../util/InjectionKeys'
 
-const counter = ref(0)
 const files: Ref<string[]> = ref([])
 
 if (!import.meta.env.SSR) {
@@ -26,9 +24,11 @@ if (!import.meta.env.SSR) {
 }
  
 // https://vuejs.org/api/composition-api-lifecycle.html#onserverprefetch
+// https://github.com/antfu/vite-ssg/issues/10
 onServerPrefetch(async() => {
   const ctx = useSSRContext()
   const ssrData = await import('../util/SSRData')
+
   const fs = await import('node:fs')
   files.value = fs.readdirSync('.')
   ssrData.addInitialData(ctx!, 'files', files.value)

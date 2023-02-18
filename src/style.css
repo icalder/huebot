@@ -10,7 +10,8 @@
   }
   body {
     display: flex;
-    place-items: center;
+    align-items: center;
+    justify-content: center;
     min-width: 320px;
     @apply leading-relaxed;
   }
@@ -37,7 +38,9 @@
 
 #app {
   @apply text-center;
-  margin: 0 auto;
+  flex-grow: 1;
+  margin-left: 5px;
+  margin-right: 5px;
 }
 
 /*@media (prefers-color-scheme: light) {

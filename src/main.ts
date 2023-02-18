@@ -1,6 +1,7 @@
 import { createSSRApp } from 'vue'
 import App from './App.vue'
 import { createRouter } from './router'
+import { useHueStore } from './services/HueStore'
 import { InitialDataKey } from './util/InjectionKeys'
 
 declare global {
@@ -12,8 +13,11 @@ declare global {
 // fresh store here.
 export function createApp() {
   const app = createSSRApp(App)
+  const hueStore = useHueStore()
   if (!import.meta.env.SSR) {
+    // client
     app.provide(InitialDataKey, window.INITIAL_DATA)
+    hueStore.loadState(window.INITIAL_DATA)
   }
   const router = createRouter()
   app.use(router)

@@ -1,0 +1,103 @@
+@url=https://192.168.1.107
+@username=yAqYgN-3scCv858Ed5YIvWqONSSBo-7IMOUIuqNE
+
+
+# Event streaming
+ # curl --insecure -N -H 'hue-application-key: yAqYgN-3scCv858Ed5YIvWqONSSBo-7IMOUIuqNE' -H 'Accept: text/event-stream' https://192.168.1.107/eventstream/clip/v2
+
+GET {{url}}/description.xml
+
+###
+# REGISTRATION
+# Send the request below using the clip API debugger
+# http://192.168.1.107/debug/clip.html
+# expect error 'link button not pressed' 
+# press the button then POST again
+POST {{url}}/api/username
+
+{
+  "devicetype": "Huebot System Client"
+}
+
+###
+# Info about everything
+GET {{url}}/api/{{username}}
+
+###
+# Info about lights
+GET {{url}}/api/{{username}}/lights
+
+###
+# Info about sensors
+GET {{url}}/api/{{username}}/sensors/80
+
+###
+PUT  {{url}}/api/{{username}}/sensors/2/config
+
+{
+  "on": true
+}
+
+###
+# Info about groups
+GET {{url}}/api/{{username}}/groups
+
+###
+# Info about rules
+GET {{url}}/api/{{username}}/rules
+
+###
+# Info about schedules
+GET {{url}}/api/{{username}}/schedules
+
+# Local API
+###
+GET http://localhost:5173/api/ping
+
+###
+GET http://localhost:5173/api/sensors/22
+
+###
+PUT http://localhost:5173/api/sensors/2/config
+Content-Type: application/json
+
+{
+  "on": true
+}
+
+###
+GET http://localhost:5173/api/datastore/sensors/4/temperatures
+
+### V2 API
+# https://developers.meethue.com/develop/hue-api-v2/api-reference/
+### all resources
+GET {{url}}/clip/v2/resource
+hue-application-key: {{username}}
+
+### devices
+GET {{url}}/clip/v2/resource/device
+hue-application-key: {{username}}
+
+### Garage outdoor motion sensor
+GET {{url}}/clip/v2/resource/device/e497a754-499c-421e-8113-f1ba5c56ce2a
+hue-application-key: {{username}}
+
+### motion
+GET {{url}}/clip/v2/resource/motion/ee8125bb-945e-4a09-b7ad-107a55e9333c
+hue-application-key: {{username}}
+
+### device power
+GET {{url}}/clip/v2/resource/device_power/a7621956-7cf3-456a-8342-65a64efae4b5
+hue-application-key: {{username}}
+
+### zigbee connectivity
+GET {{url}}/clip/v2/resource/zigbee_connectivity/d8ca76b6-ad00-457a-9224-922b63f03aa5
+hue-application-key: {{username}}
+
+### light level
+GET {{url}}/clip/v2/resource/light_level/3dac2db7-1613-47b0-8670-aceffeab076f
+hue-application-key: {{username}}
+
+### temperature
+GET {{url}}/clip/v2/resource/temperature/eed74724-278a-44ea-80a2-ea67bab928d9
+hue-application-key: {{username}}

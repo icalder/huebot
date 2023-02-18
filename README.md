@@ -18,13 +18,13 @@ You can learn more about Take Over mode [here](https://github.com/johnsoncodehk/
 ## SSR Setup Notes
 ### Standard vue-ts Project create
 ```
-npm create vite@latest vite-vue-ssr-template -- --template vue-ts
+npm create vite@latest huebot -- --template vue-ts
 
-Scaffolding project in C:\Users\Iain\typescript\vite-examples\vite-vue-ssr-template...
+Scaffolding project in C:\Users\Iain\typescript\vite-examples\huebot...
 
 Done. Now run:
 
-  cd vite-vue-ssr-template
+  cd huebot
   npm install
   npm run dev
 

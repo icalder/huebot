@@ -2,9 +2,16 @@ import { basename } from 'node:path'
 import { renderToString, SSRContext } from 'vue/server-renderer'
 import { createApp } from './main'
 import { getInitialData } from './util/SSRData'
+import { useHueApiClient } from './api/HueApiClient'
+import { createDataStore } from './services/MongoDataStore'
 
 export async function render(url: string, manifest: Record<string, string[]>) {
   const { app, router } = createApp()
+
+  await useHueApiClient().setup(process.env.HUE_IP!, process.env.HUE_USERNAME!)
+  if (process.env.DATASTORE_HOST) {
+    createDataStore(process.env.DATASTORE_HOST)
+  }
 
   // set the router to the desired URL before rendering
   await router.push(url)
@@ -22,7 +29,6 @@ export async function render(url: string, manifest: Record<string, string[]>) {
   // request.
   const preloadLinks = renderPreloadLinks(ctx.modules, manifest)
 
-  const idata = getInitialData(ctx)
   return [html, preloadLinks, getInitialData(ctx)]
 }
 
