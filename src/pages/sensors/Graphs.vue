@@ -77,7 +77,7 @@ onMounted(() => {
 
 onServerPrefetch(async() => {
   const ctx = useSSRContext()
-  const dsm = await import('../../services/MongoDataStore')
+  const dsm = await import('../../services/PostgresDataStore')
   const ds = dsm.useDataStore()
   const end = new Date()
   const [s, mdata, ldata, tdata] = await Promise.all([

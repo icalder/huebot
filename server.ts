@@ -10,7 +10,7 @@ import * as dotenv from 'dotenv'
 import { apiRouter } from './src/api/Router'
 import { dataStoreRouter } from './src/api/DataStoreRouter'
 import { useHueApiClient } from './src/api/HueApiClient'
-import { createDataStore } from './src/services/MongoDataStore'
+import { createDataStore } from './src/services/PostgresDataStore'
 
 dotenv.config()
 const isTest = process.env.NODE_ENV === 'test' || !!process.env.VITE_TEST_BUILD
@@ -71,8 +71,8 @@ export async function createServer(
   }
 
   app.use('/api', apiRouter)
-  if (process.env.DATASTORE_HOST) {
-    const ds = createDataStore(process.env.DATASTORE_HOST)
+  if (process.env.DATASTORE_CONNSTR) {
+    const ds = await createDataStore(process.env.DATASTORE_CONNSTR)
     const dsRouter = dataStoreRouter(ds)
     app.use('/api/datastore', dsRouter)
   }

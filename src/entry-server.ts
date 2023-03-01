@@ -3,14 +3,14 @@ import { renderToString, SSRContext } from 'vue/server-renderer'
 import { createApp } from './main'
 import { getInitialData } from './util/SSRData'
 import { useHueApiClient } from './api/HueApiClient'
-import { createDataStore } from './services/MongoDataStore'
+import { createDataStore } from './services/PostgresDataStore'
 
 export async function render(url: string, manifest: Record<string, string[]>) {
   const { app, router } = createApp()
 
   await useHueApiClient().setup(process.env.HUE_IP!, process.env.HUE_USERNAME!)
-  if (process.env.DATASTORE_HOST) {
-    createDataStore(process.env.DATASTORE_HOST)
+  if (process.env.DATASTORE_CONNSTR) {
+    createDataStore(process.env.DATASTORE_CONNSTR)
   }
 
   // set the router to the desired URL before rendering
