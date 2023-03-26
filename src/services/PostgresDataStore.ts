@@ -43,8 +43,10 @@ export class PostgresDataStore implements DataStore {
 let ds: PostgresDataStore
 
 export async function createDataStore(connectionString: string): Promise<DataStore> {
-  ds = new PostgresDataStore(connectionString)
-  await ds.connect()
+  if (!ds) {
+    ds = new PostgresDataStore(connectionString)
+    await ds.connect()
+  }
   return ds
 }
 
