@@ -14,7 +14,7 @@ export function resample24<T>(start: Date, input: TimeStampedData<T>[],
     const ti = i.ts.getTime()
     const deltat = ti - t0
     const bucket = Math.floor(deltat / (60 * 60 * 1000))
-    if (bucket < 24) {
+    if (bucket >= 0 && bucket < 24) {
       acc[bucket][0]++
       // update the cumulative average for this bucket
       acc[bucket][1] = acc[bucket][1] + (transformer(i.value) - acc[bucket][1]) / acc[bucket][0]
