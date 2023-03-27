@@ -70,6 +70,41 @@ export async function createServer(
     )
   }
 
+  // empty implementation to avoid errors running in local dev env
+  app.get('/eventstream', async (req, res) => {
+    const reqId = crypto.randomUUID()
+    console.log(`${reqId} connected`)
+    let connected = true
+
+    req.on("close", () => {
+      connected = false
+      console.log(`${reqId} closed`)
+    })
+
+    req.on("end", function() {
+      connected = false
+      console.log(`${reqId} ended`)
+    })
+
+    res.set({
+      'Cache-Control': 'no-cache',
+      'Content-Type': 'text/event-stream',
+      'Connection': 'keep-alive'
+    })
+    res.flushHeaders()
+
+    // Tell the client to retry every 5 seconds if connectivity is lost
+    res.write('retry: 5000\n\n')
+
+    while (connected) {
+      await new Promise(resolve => setTimeout(resolve, 30000))
+      res.write(`data: {"ping": "${new Date()}"}\n\n`)
+      if (process.env.NODE_ENV === 'production') {
+        res.flush()
+      }
+    }
+  })
+
   app.use('/api', apiRouter)
   if (process.env.DATASTORE_CONNSTR) {
     const ds = await createDataStore(process.env.DATASTORE_CONNSTR)
