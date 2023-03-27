@@ -14,11 +14,19 @@ export class PostgresDataStore implements DataStore {
     await this.client.connect()
   }
 
+  // node-postgres converts DATE and TIMESTAMP columns into the local time of the node process set at process.env.TZ.
+  // - times in the DB are stored in UTC so we need to correct any offset introduced by the local time conversion
+  protected static tsToUTC(ts: Date): Date {
+    const tzOffset = ts.getTimezoneOffset() // minutes
+    ts = new Date(ts.getTime() - 60000 * tzOffset)
+    return ts
+  }
+
   async getMotionData(sensorId: string, start: Date, end: Date): Promise<TimeStampedData<boolean>[]> {
     const result: TimeStampedData<boolean>[] = []
     const res = await this.client.query('select * from sensor_motion($1, $2, $3)', [sensorId, start, end])
     for (const row of res.rows) {
-      result.push({ts: row.creationtime, value: !!row.motion})
+      result.push({ts: PostgresDataStore.tsToUTC(row.creationtime), value: !!row.motion})
     }
     return result
   }
@@ -26,7 +34,7 @@ export class PostgresDataStore implements DataStore {
     const result: TimeStampedData<number>[] = []
     const res = await this.client.query('select * from sensor_light_level($1, $2, $3)', [sensorId, start, end])
     for (const row of res.rows) {
-      result.push({ts: row.creationtime, value: row.light_level})
+      result.push({ts: PostgresDataStore.tsToUTC(row.creationtime), value: row.light_level})
     }
     return result
   }
@@ -34,7 +42,7 @@ export class PostgresDataStore implements DataStore {
     const result: TimeStampedData<number>[] = []
     const res = await this.client.query('select * from sensor_temperature($1, $2, $3)', [sensorId, start, end])
     for (const row of res.rows) {
-      result.push({ts: row.creationtime, value: row.temperature})
+      result.push({ts: PostgresDataStore.tsToUTC(row.creationtime), value: row.temperature})
     }
     return result
   } 
