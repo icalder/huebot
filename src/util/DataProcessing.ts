@@ -40,7 +40,21 @@ export function resample24<T>(start: Date, input: TimeStampedData<T>[],
   }
 
   // Return data as {x,y} points
-  const firstHour = start.getHours()
+  // TODO accept a local timezone parameter - for now hard code to London
+  const firstHour = utcTimeToEuropeLondon(start).getHours()
   const result = acc.map((b, idx) => ({x: (firstHour + idx) % 24, y: b[1]}))
   return result
+}
+
+function utcTimeToEuropeLondon(utcTime: Date): Date {
+  const s = utcTime.toLocaleString('sv-SE', {
+    timeZone: "Europe/London",
+    year: 'numeric',
+    month: '2-digit',
+    day: '2-digit',
+    hour: '2-digit',
+    minute: '2-digit',
+    second: '2-digit',
+    hour12: false}) + '.000Z'
+  return new Date(s)
 }
