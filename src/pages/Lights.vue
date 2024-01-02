@@ -1,7 +1,7 @@
 <template>
   <h1>Lights</h1>
   <ul>
-    <li v-for="light in lights" :key="light.id">{{ light.name }}</li>
+    <li v-for="light in lights" :key="light.id">[{{ light.id }}] {{ light.name }}</li>
   </ul>
 </template>
 

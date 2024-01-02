@@ -5,7 +5,7 @@
   </section>
   <footer>
     <hr />
-    Copyright (C) 2022. All rights reserved.
+    Copyright (C) 2024. All rights reserved.
   </footer>
 </template>
 
